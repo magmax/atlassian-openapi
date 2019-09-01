@@ -1,0 +1,122 @@
+openapi: 3.0.0
+info:
+  title: Atlassian BitBucket API
+  description: Allows access to BitBucket API.
+  version: 2.0.0.0
+servers:
+  - url: https://api.bitbucket.org/2.0
+    description: BitBucket server
+paths:
+  /user:
+    get:
+      summary: Returns the currently logged in user.
+      responses:
+        '200':    # status code
+          description: The current user.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/User'
+        '401':
+          description: When the request wasn't authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /user/emails:
+    get:
+      summary: Returns all the authenticated user's email addresses. Both confirmed and unconfirmed.
+      responses:
+        '200':    # status code
+          description: The current user.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ArrayOfEmails'
+        '401':
+          description: When the request wasn't authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+components:
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      description: Base type for most resource objects. It defines the common type element that identifies an object's type. It also identifies the element as Swagger's discriminator.
+      type: object
+      properties:
+        type:
+          type: string
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            detail:
+              type: string
+            data:
+              type: object
+              description: Optional structured data that is endpoint-specific.
+      required:
+        - type
+        - error.message
+
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+        display_name:
+          type: string
+        nickname:
+          type: string
+        account_id:
+          type: string
+        created_on:
+          type: string
+        is_staff:
+          type: boolean
+        account_status:
+          type: string
+        type:
+          type: string
+        uuid:
+          type: string
+    ArrayOfEmails:
+      type: object
+      properties:
+        pagelen: 
+          type: integer
+        page:
+          type: integer
+        size:
+          type: integer
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/Email'
+    Email:
+      type: object
+      properties:
+        is_primary:
+          type: boolean
+        is_confirmed:
+          type: boolean
+        type:
+          type: string
+        email:
+          type: string
