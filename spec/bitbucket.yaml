@@ -39,8 +39,68 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-                
+  /repositories/{username}/{repo_slug}/deploy-keys:
+    get:
+      summary: Returns all deploy-keys belonging to a repository.
+      parameters:
+        - name: username
+          in: path
+          description: |
+            This can either be the username or the UUID of the account, surrounded by curly-braces, for example: {account UUID}. An account is either a team or user.
+          required: true
+          schema:
+            type: string
+        - name: repo_slug
+          in: path
+          description: "This can either be the repository slug or the UUID of the repository, surrounded by curly-braces, for example: {repository UUID}."
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deploy keys matching the repository
+          content:
+            application/json:
+              schema:
+                type: object  # TODO
+    post:
+      summary: |
+        Create a new deploy key in a repository.
+      parameters:
+        - name: username
+          in: path
+          description: |
+            This can either be the username or the UUID of the account, surrounded by curly-braces, for example: {account UUID}. An account is either a team or user.
+          required: true
+          schema:
+            type: string
+        - name: repo_slug
+          in: path
+          description: "This can either be the repository slug or the UUID of the repository, surrounded by curly-braces, for example: {repository UUID}."
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                key:
+                  type: string
+                label:
+                  type: string
+      responses:
+        '200': 
+          description: The deploy key that was created
+
+
 components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
   responses:
     NotFound:
       description: The specified resource was not found

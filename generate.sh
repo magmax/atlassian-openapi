@@ -1,13 +1,19 @@
 #!/bin/bash
 
 lang=${1:-python}
-apis=${2:-$(ls -1 *.yaml|cut -d "." -f 1)}
+apis=${2:-$(find spec -name '*.yaml')}
+version=${3:-0.0.$(date +%y%m%d)}
+
+url=
 
 for api in $apis; do
+  filename=$(basename ${api})
+  apiname="${filename%.*}"
   docker run --rm \
     -v ${PWD}:/local \
     openapitools/openapi-generator-cli generate \
-    -i /local/${api}.yaml \
+    -i /local/${api} \
     -g ${lang}\
-    -o /local/out/${lang}/${api}
+    --additional-properties=projectName=${apiname}-openapi,packageVersion=${version},packageUrl=${url} \
+    -o /local/out/${lang}/${apiname}
 done
