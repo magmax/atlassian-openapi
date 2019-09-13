@@ -15,6 +15,6 @@ for api in $apis; do
     -i /local/${api} \
     -g ${lang}\
     --skip-validate-spec \
-    --additional-properties=projectName=${apiname}-openapi,packageVersion=${version},packageUrl=${url} \
+    --additional-properties=packageName=${apiname}openapi,projectName=${apiname}-openapi,packageVersion=${version},packageUrl=${url} \
     -o /local/out/${lang}/${apiname}
 done
