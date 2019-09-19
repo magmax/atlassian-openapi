@@ -1,0 +1,3 @@
+[submodule "libs/python/bitbucket"]
+	path = libs/python/bitbucket
+	url = git@github.com:magmax/bitbucket-openapi.git
